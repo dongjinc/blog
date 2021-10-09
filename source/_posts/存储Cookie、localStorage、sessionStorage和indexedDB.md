@@ -36,12 +36,20 @@ tags:
 ```js
 // 1.days设置成0表示删除cookie,让其过期
 // 2.如果加入domain=.test.com会存在设置不上的情况，因不在当前域名下设置
+
 function setCookie(name, value, days) {
   const d = new Date();
   d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = "expires" + d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires;
+  document.cookie = name + "="+ escape(value) + ";expires=" + d.toGMTString();
 }
+
+// 注意 如果cookies设置了httpOnly,不可通过代码进行读取/修改/删除
+document.cookie = "qunhe-jwt=1123; max-age=21010; domain=.kujiale.com;path=/";
+/**
+ * 1.httpOnly与安全 - 浏览器为什么要限制客户端去访问cookie?
+ * 如果任何cookie都能被客户端通过document.cookie获取将会发生多么可怕的事情.
+ * 如果页面遭受了XSS攻击,一段恶意的script脚本插到页面中.脚本可通过document.cookie读取用户身份验证相关的cookie,并将cookie发送到攻击者的服务器上.
+ * /
 ```
 
 ```js
@@ -107,6 +115,14 @@ app.use(async (ctx, next) => {
 // nginx 后期学习一下@TODO:  https://netsecurity.51cto.com/art/202106/666906.htm
 ```
 
+### secure 用来设置 cookie 只有确保安全的请求中才会发送.
+
+- 当请求 https 或者其他安全协议时,包含 secure 选项的 cookie 才能被发送至服务器
+
+### domain 和 path
+
 <!-- 有关于浏览器缓存和Vary的问题。 -->
 
 https://lifeni.life/article/cookies-issue
+
+https://segmentfault.com/a/1190000004556040
