@@ -115,9 +115,10 @@ app.use(async (ctx, next) => {
 // nginx 后期学习一下@TODO:  https://netsecurity.51cto.com/art/202106/666906.htm
 ```
 
-### secure 用来设置 cookie 只有确保安全的请求中才会发送.
+### secure 用来设置 cookie 只有确保安全的请求(https/其他安全协议时)中才会发送.
 
 - 当请求 https 或者其他安全协议时,包含 secure 选项的 cookie 才能被发送至服务器
+- ⚠️：如果要在客户端即网页通过 js 去设置 secure 类型的 cookie，必须保证网页时 https 协议的。在 http 协议的网页是无法设置 secure 类型 cookie 的
 
 ### domain 和 path
 
