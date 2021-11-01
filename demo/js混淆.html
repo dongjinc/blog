@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea id="code" cols="80" rows="20"> </textarea>
+    <input type="button" onclick="encode()" value="编码" />
+    <input type="button" onclick="run()" value="执行" />
+    <input type="button" onclick="decode()" value="解码" />
+    <script>
+      function decode() {
+        var code = `eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('b'+e(c)+'b','g'),k[c])}}return p}('D B=B='["l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/I%4%s%r%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/J%4%s%r%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/G%4%s%r%9%8%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/K%t%F%C%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/E%4%s%r%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/H%4%s%r%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/S%4%s%r%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/R%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/T%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/U%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/Q%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/L%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/%4%5%5%2%6%P%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/%4%5%5%2%6%M%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/%4%5%5%2%6%N%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c/%j%n%q%3%p%o/%4%5%5%2%6%O%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i"]\';',57,57,'81|E3|E5|E8|E4|B8|96|9B|29|281|E9|93|86|88|82|lovelivesunshine|97|80|jpg|E7|9C||BD|AC|9D|AF|AC02|AE|BF|E6|B1|8C|89|A7|20|A4|BE|pages|B9|var|109|94|107|110|105|106|108|116|84102|84103|84104|84101|115|112|111|113|114'.split('|'),0,{}))`;
+        console.log(code, "code");
+        code2 = code.replace(/^eval/, "");
+        //alert(code);
+        document.getElementById("code").value = eval(code2);
+      }
+
+      function decode(code) {
+        return eval(code.replace(/^eval/, ""));
+      }
+      function a(arr) {
+        console.log(eval(arr[0]));
+      }
+      console.log(
+        a`(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('D B=B=\'["l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/I%4%s%r%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/J%4%s%r%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/G%4%s%r%9%8%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/K%t%F%C%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/E%4%s%r%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/H%4%s%r%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/S%4%s%r%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/R%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/T%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/U%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/Q%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/L%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/%4%5%5%2%6%P%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/%4%5%5%2%6%M%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/%4%5%5%2%6%N%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i","l\\/f%1%e%0%1%0%6%1%0%g%3%h%0%2%5%d%4%m%k%2%b%0%a%7%c\\/%j%n%q%3%p%o\\/%4%5%5%2%6%O%2%z%x%2%7%A%y%t%u%w%2%v%6%9%8.i"]\';',57,57,'81|E3|E5|E8|E4|B8|96|9B|29|281|E9|93|86|88|82|lovelivesunshine|97|80|jpg|E7|9C||BD|AC|9D|AF|AC02|AE|BF|E6|B1|8C|89|A7|20|A4|BE|pages|B9|var|109|94|107|110|105|106|108|116|84102|84103|84104|84101|115|112|111|113|114'.split('|'),0,{}))`,
+        123
+      );
+    </script>
+  </body>
+</html>
