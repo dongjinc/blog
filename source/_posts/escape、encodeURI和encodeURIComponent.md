@@ -22,3 +22,7 @@ tags:
 - 如果只是编码字符串，与 URL 没任何关系，那么用 escape
 - 如果你需要编码整个 URL，需要使用这个 URL，那么用 encodeURI
 - 如果你需要编码整个 URL 当作参数时，使用 encodeURIComponent，这样可以对 “http://” 进行编码
+
+```js
+    https://www.baidu.com/?params=https%3A%2F%2Ftalent.baidu.com%2Fexternal%2Fbaidu%2Fcampus.html
+```

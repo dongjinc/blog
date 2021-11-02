@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="outerMost"
+      style="
+        border: 1px solid black;
+        width: 150px;
+        height: 120px;
+        padding: 20px;
+      "
+    >
+      outerMost
+      <div
+        id="middle"
+        style="
+          border: 1px solid black;
+          width: 60px;
+          height: 60px;
+          padding: 20px;
+        "
+      >
+        Middle
+        <a
+          href=""
+          id="innerMost"
+          style="
+            border: 1px solid black;
+            width: 30px;
+            height: 20px;
+            display: block;
+            margin: 20px;
+          "
+          >click</a
+        >
+      </div>
+    </div>
+    <script>
+      const outerElement = document.getElementById("outerMost");
+      const middleElement = document.getElementById("middle");
+      const innerElement = document.getElementById("innerMost");
+
+      outerElement.addEventListener("click", function () {
+        console.log("trigger outermost div");
+      });
+      middleElement.addEventListener("click", function () {
+        console.log("trigger middle div");
+      });
+      innerElement.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("trigger innermost button");
+      });
+    </script>
+  </body>
+</html>
