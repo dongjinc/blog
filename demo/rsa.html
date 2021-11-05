@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script> -->
+    <!-- <script src="./aes.js"></script> -->
+    <script src="https://raw.githubusercontent.com/bitwiseshiftleft/sjcl/master/sjcl.js"></script>
+    <script>
+      var keyString = "2d73c1dd2f6a3c981afc7c0d49d7b58f";
+      var key = sjcl.codec.base64.toBits(keyString);
+      var cipher = new sjcl.cipher.aes(key);
+      var data = sjcl.codec.utf8String.toBits("Hello Crypto!");
+      var salt = sjcl.codec.base64url.toBits(
+        "kLME6vN-WdU_W9XVN9a1Z3E_p8HQ5C7X1La-3ZjEml1ytVRMfvtEXzeapbce2LjFI1dHEGtWv9bZ_U6K2CG1-K4lQPunFXWxXmsTQIXlGfwmpveg2AFeLFiqGmALnfbP"
+      );
+      debugger;
+      var encrypted = sjcl.encrypt(keyString, "Hello Crypto!", {
+        mode: "gcm",
+        salt: salt,
+      });
+    </script>
+  </body>
+</html>
