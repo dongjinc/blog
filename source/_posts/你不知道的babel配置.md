@@ -149,3 +149,20 @@ tags: .babelrc.json 、 babel.config.js
     // 因此每个实例赋予了唯一的名称，因此具有唯一的身份性
     // because each instance has been given a unique name and thus a unique identity.
     ```
+
+## 在 单一仓库 (monorepo) 模式下，使用.babelrc 时，引用其他 package 内容，不会被 babel，导致浏览器无法识别引用的内容而报错，例如 引用某个 react 组件，未经过 react-loader，从而导致报错。
+
+- 在 babel 官方配置中提到，不同场景 使用不同的 babel 文件配置 https://www.babeljs.cn/docs/configuration#%E4%BD%BF%E7%94%A8-cli-babelcli
+
+- .babelrc 与 babel.config.json 的不同
+  - 覆盖维度不同
+    - 项目范围配置 babel.config.js 具有不同的扩展名 (.js, .cjs, .mjs)
+    - 文件相关配置 .babelrc.json、package.json 其中 .babelrc.json 具有不同的扩展名 (.babelrc, .js, .cjs, .mjs)
+- 项目范围配置(Project-wide configuration)
+
+  - 在新版本 babel7.x 中，babel 含有“root”目录概念，其默认是当前工作站的目录文件。对于项目范围配置，在“root”目录下 babel 将会自动搜索 babel.config.json 文件，或所支持的扩展名(例如: 在 👆 所提到的，babel.config.js、babel.config.cjs、babel.config.mjs)。或者用户可以通过 "configFile"值显示声明配置文件搜索的行为。
+  - 由于项目范围配置文件与配置文件物理位置分开，因此其非常适合广泛应用配置。甚至允许通过 plugins 和 presets 轻松的应用于 node_modules 或符号链接包中的文件。
+  - 这个项目范围配置主要缺点，依赖于工作目录，如果当前是非 monorepo 的根据目录，则在 monorepo 中使用会非常痛苦。如何利用好此配置，需要参考 monorepo 文档
+
+- 文件相关配置(File-relative configuration) - https://www.babeljs.cn/docs/config-files
+  Searching will stop once a directory containing a package.json is found, so a relative config only applies within a single package.
