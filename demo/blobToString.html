@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      async function getSyncBlob(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            const content = reader.result; //内容就在这里
+            resolve(JSON.parse(content));
+          };
+          reader.error = reject;
+          reader.readAsText(blob);
+        });
+      }
+
+      const debug = { hello: "world" };
+      const blob = new Blob([JSON.stringify(debug, null, 2)], {
+        type: "application/json",
+      });
+
+      console.time("ok");
+      // 方法一 https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
+      getSyncBlob(blob).then((res) => {
+        console.log(res, "blob");
+        console.timeEnd("ok");
+      });
+
+      // 方法二 https://developer.mozilla.org/zh-CN/docs/Web/API/Response
+      new Response(blob).text().then((res) => {
+        console.log(res, "res");
+      });
+    </script>
+  </body>
+</html>
