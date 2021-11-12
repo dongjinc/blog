@@ -32,10 +32,33 @@
         console.timeEnd("ok");
       });
 
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const content = reader.result; //内容就在这里
+          resolve(JSON.parse(content));
+        };
+        reader.error = reject;
+        reader.readAsText(blob);
+      }).then((res) => {
+        console.log(res, "blob1");
+      });
+
       // 方法二 https://developer.mozilla.org/zh-CN/docs/Web/API/Response
       new Response(blob).text().then((res) => {
         console.log(res, "res");
       });
+
+      const reader = new FileReader();
+
+      reader.onload = async function (event) {
+        const content = reader.result; //内容就在这里
+        return Promise.resolve(content);
+      };
+
+      reader.readAsText(blob);
+
+      console.log(reader.onload.then);
     </script>
   </body>
 </html>
