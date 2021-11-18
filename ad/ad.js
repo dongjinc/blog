@@ -2,23 +2,36 @@ function initAd(url, openUrl) {
   const headDom = document.querySelector("head");
   const style = document.createElement("style");
   style.innerHTML = `
+        * {
+          margin: 0
+        }
+        body {
+          padding-top: 77px;
+        }
         .ad-wrap {
-            min-height: 200px;
             cursor: pointer;
         }
-        .ad-wrap .ad-img{
-          position: fixed;
-          right: 20px;
-          bottom: 100px;
+        .ad-img {
           width: 134px;
           height: 77px;
           background: url(${url});
           background-size: 100% 100%;
         }
-        .ad-wrap-stick{
-            position: sticky;
-            top: 0;
+        .ad-wrap .ad-img{
+          position: fixed;
+          right: 20px;
+          bottom: 100px;
         }
+        .ad-wrap-stick {
+          position:fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+        }
+        .ad-wrap-stick .ad-img {
+          position: relative;
+          margin: 0 auto;
+      }
         .close{
           width: 18px;
           height: 18px;
@@ -26,6 +39,7 @@ function initAd(url, openUrl) {
           right: 8px;
           top: 4px;
           cursor: pointer;
+          z-index: 15000;
         }
     `;
   const adContainer = document.createElement("div");
@@ -46,6 +60,7 @@ function initAd(url, openUrl) {
   closeIconTemplate.content.lastChild.onclick = function (e) {
     e.stopPropagation();
     document.body.removeChild(adContainer);
+    headDom.removeChild(style);
   };
 
   // insertAdjacentHTML() 方法将指定的文本解析为 Element 元素，并将结果节点插入到DOM树中的指定位置。

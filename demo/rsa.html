@@ -9,20 +9,71 @@
   <body>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script> -->
     <!-- <script src="./aes.js"></script> -->
-    <script src="https://raw.githubusercontent.com/bitwiseshiftleft/sjcl/master/sjcl.js"></script>
+    <!-- <script src="https://raw.githubusercontent.com/bitwiseshiftleft/sjcl/master/sjcl.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.2.1/jsencrypt.js"></script>
     <script>
-      var keyString = "2d73c1dd2f6a3c981afc7c0d49d7b58f";
-      var key = sjcl.codec.base64.toBits(keyString);
-      var cipher = new sjcl.cipher.aes(key);
-      var data = sjcl.codec.utf8String.toBits("Hello Crypto!");
-      var salt = sjcl.codec.base64url.toBits(
-        "kLME6vN-WdU_W9XVN9a1Z3E_p8HQ5C7X1La-3ZjEml1ytVRMfvtEXzeapbce2LjFI1dHEGtWv9bZ_U6K2CG1-K4lQPunFXWxXmsTQIXlGfwmpveg2AFeLFiqGmALnfbP"
-      );
-      debugger;
-      var encrypted = sjcl.encrypt(keyString, "Hello Crypto!", {
-        mode: "gcm",
-        salt: salt,
-      });
+      // var keyString = "2d73c1dd2f6a3c981afc7c0d49d7b58f";
+      // var key = sjcl.codec.base64.toBits(keyString);
+      // var cipher = new sjcl.cipher.aes(key);
+      // var data = sjcl.codec.utf8String.toBits("Hello Crypto!");
+      // var salt = sjcl.codec.base64url.toBits(
+      //   "kLME6vN-WdU_W9XVN9a1Z3E_p8HQ5C7X1La-3ZjEml1ytVRMfvtEXzeapbce2LjFI1dHEGtWv9bZ_U6K2CG1-K4lQPunFXWxXmsTQIXlGfwmpveg2AFeLFiqGmALnfbP"
+      // );
+      // debugger;
+      // var encrypted = sjcl.encrypt(keyString, "Hello Crypto!", {
+      //   mode: "gcm",
+      //   salt: salt,
+      // });
+
+      const PUB_KEY = `
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtBBKYnTSjzuuH4P3V5W7
+ZFJGIXAlsJlcR0XgJLJ0PMjinimoEOy3VUMl0kIEODKX/aYCSJ9PrzVPM77uCMcg
+J26qyPcrA2zG+Wkx5c0C3Lce+w8mRvCxlk0+5OSvBoNcENgNLdN3pqz9xinNkqJN
+trL/b5rTegRgRFMhqSr6/uz+fkR+fMy9Kd333fZNyAdb0gksz8BNmP8dEbNFNUh2
+AKxnsGTAAul1Btli7AoNmKMtSeeRuL8nWPL9Q58KdLithJAV8pPRIuZTLd3VDDzE
+y2o1yIbYRgoEtjdbL4PJih9DNK5NiXDoVFLZI04eHDayxJd+KF89PO6aQyPFAr9+
+LQIDAQAB`;
+
+      const PRIVATE_KEY = `
+      MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC0EEpidNKPO64f
+      g/dXlbtkUkYhcCWwmVxHReAksnQ8yOKeKagQ7LdVQyXSQgQ4Mpf9pgJIn0+vNU8z
+      vu4IxyAnbqrI9ysDbMb5aTHlzQLctx77DyZG8LGWTT7k5K8Gg1wQ2A0t03emrP3G
+      Kc2Sok22sv9vmtN6BGBEUyGpKvr+7P5+RH58zL0p3ffd9k3IB1vSCSzPwE2Y/x0R
+      s0U1SHYArGewZMAC6XUG2WLsCg2Yoy1J55G4vydY8v1Dnwp0uK2EkBXyk9Ei5lMt
+      3dUMPMTLajXIhthGCgS2N1svg8mKH0M0rk2JcOhUUtkjTh4cNrLEl34oXz087ppD
+      I8UCv34tAgMBAAECggEBAIg2np62cyaJZiJPKUgna/frSUQ4Wzqp+SWtlW8NVGM7
+      MDunlY0gFVw5jJ3u9NQyacom0Clx4szPDhg+AkG/qPJLhIS8fdx8aFT6oBWQLe8b
+      1CLmBfW6VQ03aDGtUT4jFv1jAy08gJIk4WEL9IhNoW5pIFSkEgCG2PA21wrrCa7Y
+      ApmSfPbDHuKeSc2Zj5X+lwMOYS3w8uTD365QqAQXXw3ztUiBuSCpSPGe/oN1xZ+m
+      vG1bkXnsaZFTb03wO6j5sEr73RDbEU45+N3E/+0cb/ovAdJ7oZrv4dkHIYwBFval
+      23GWJaekYAD48nGXMhTY6GXdXlSR9ixttmHjhoC/jiECgYEA2gQZ+l3m9CpBAB08
+      OF+Bg1WHnQ+seRRW44aJSaT2KS9jzDhuZOKWlP+gdBG9tscUdEAVi7EOT9EL/fJv
+      r7TzvW0bkSf5qn6Lsl3r83eZq51UWJoGpKbkNY3GLiUbcxHyoPMehh08XCbz8YP4
+      CdS/FQCex2ZeECiJ0+WwMdkxk0UCgYEA029yIOONCemayVpAbnFeCJp4DH4xfxIt
+      76PVl0Ku+NLG83zXi9AKsvxiVwRz+vWo/sdSjxEIT+xsfFP4eMUKI+KUBahkXXvm
+      eHmT51e8FxM/9AH8y7W8fecXMh2o36jZIaMB9QeIrmpzw4/GVuP2jcpNrRjN/BGx
+      kfX7Zf0uuckCgYBI5WAuR6GGeG5ddGkDTGPInxuGF4yKu5NF5mEXH7IzGSZcTW4U
+      C3NgBI0I4jm12KDtMdRCbgQkCfjhg2N2s6Ff8BBsm5ouOLvK+v5+3LmkGSnvqiiY
+      ezkI8wuVuFCSTCj9Se0l2Laq9VdRpNeVqe3uPtPYRlEjQ/q5wC4GrOGXpQKBgQCf
+      3VPdqi+pnwd51tOArhb7SlAaog+qlIRG/QkyJSlG2Zez4mDXRaXRTyLLyIIo7jWo
+      7exuX+J5C7m7B4KHTfQszdQ9suSwCk5oKQS7loqQp+1jAV2yaObsCx5uth5JfdEu
+      raF9MwUVW0fMRZkheZuh+aRhjK+yN26bffFnW9dIgQKBgQCIR/BkUuuueIREynhg
+      IzlKy2iV7P3jHaDAgLdhBfLU1Isx7Rb81QKTsPa5OglmdOmiXqffAaj3P97FPb85
+      Nb9wmtmzaNDHStMKq2o5jvqQuBKbkr9budJtDx5hhsqMefLbjLEvyXvsDXTq1Ryv
+      fjaPAS/u0aPfMFnCb9L+gRsNyg==
+      `;
+
+      const key = "sIc2ZywAnPVrMC6VsExCOc9vFHAOzaN/Vnulj4XeIqE=";
+      /** 加密向量 */
+      const iv = "tnZFDeFszdnYsrJx";
+
+      const jsEncrypt = new JSEncrypt();
+      jsEncrypt.setPublicKey(PUB_KEY);
+      const encode = jsEncrypt.encrypt(key + "." + iv);
+
+      const jsDecrypt1 = new JSEncrypt();
+      jsDecrypt1.setPrivateKey(PRIVATE_KEY);
+      console.log(jsDecrypt1.decrypt(encode));
     </script>
   </body>
 </html>
