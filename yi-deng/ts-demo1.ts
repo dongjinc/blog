@@ -220,18 +220,3 @@ class BookmarkService<T extends Bookmark = Bookmark1> {
 const s3 = new BookmarkService();
 
 s3.items = [{ msg: "1" }];
-
-// readonly
-// let err1: readonly Set<number>
-let ok1: readonly boolean[];
-let ok2: readonly [string, number];
-
-ok1 = [false];
-ok1 = [false];
-
-/**
- * 记录问题
- * 1.ts 中 as const 是什么意思
- * 2.#私有修饰符和private的区别
- * 3.type和interface区别
- */
