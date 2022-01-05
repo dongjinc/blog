@@ -123,6 +123,8 @@ error: true // 可解决浏览器报错问题
 <!-- https://github.com/webpack/webpack-dev-server/blob/master/migration-v4.md -->
 
 webpack-dev-server ⚠️：不提供 bundle.js 自动注入，需手动注入
+通过配置 output: {} 和 devServer: {} 自动注入 bundle.js，如果要开发 react、vue 时，需要使用 HtmlWebpackPlugin 单独提供 public/index.html 模版，因为需要在 html 写入 <div id="root"></div>
+
 在 webpack5 中 devServer 配置有过改动，v3 与 v4 有不同
 新增了 static，去掉了 contentBase
 static: {
@@ -659,7 +661,7 @@ console.log(require.context("./component/", true, /\.js$/));
 - 对于动态结构来说，导入和导出可以在运行时更改。
 - 静态结构特性
 - 对于静态结构来说，编译时(静态地)确定导入和导出。只需要查看源代码，而不必执行它
-- es6 语法上强制执行，您只能在顶层导入和导出（永远不要嵌套在条件语句中）
+- es6 语法上强制执行，您只能在顶层导入和导出（永远不要嵌套在条件语句中）
 - import 和 export 语句没有动态部分（不允许使用变量）
 - 好处
 - 1.捆绑期间的死代码消除
@@ -788,6 +790,34 @@ resolve.modules 中指定所有目录检索模块。通过 resolve.alias 别名�
 1。如果 package 中包含 package.json 文件，那么在 resolve.exportsFields 配置选项中指定字段会被依次查找。通过 package.json main 字段确定 package 可用的 export
 2.resolver 将会检查路径是指向文件还是文件夹。
 如果文件的扩展名被包含在 resolve.extensions 项内，可直接将其打包，否则通过配置该项告诉解析器在解析中能够接受哪些扩展名
+
+## 相关 loader
+
+- less-loader
+
+```js
+     {
+      test: /\.less$/,
+      use: [
+        "style-loader",
+        "css-loader",
+        {
+          loader: "less-loader",
+          options: {
+            lessOptions: {
+              globalVars: { // 这个选项定义了一个可以被文件引用的变量。 实际上，声明被放置在你的基础 Less 文件的顶部，这意味着它可以被使用，但如果在文件中定义了这个变量，它也可以被覆盖。
+                var1: "yellow",
+                var2: "regular value",
+              },
+              modifyVars: { // 与全局变量选项相反，这将声明放在基本文件的末尾，这意味着它将覆盖您的 Less 文件中定义的任何内容。
+                var1: "yellow"
+              }
+            },
+          },
+        },
+      ],
+    }
+```
 
 git push origin --delete main
 git -vv
