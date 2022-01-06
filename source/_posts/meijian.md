@@ -35,6 +35,17 @@ web - 10
 banner、navBar 搜索框 动画交互联动 2
 自测+联调 2
 
+# 美间 sp 22
+
+cms 5.5 1.弹窗管理布局(上架和下架) 2 2.创建/编辑弹窗 2 参考(https://sit-cms.meijian.io/mj/meijian/cms/content/popup) 3.可见用户群 1.5
+
+前台 3
+广告弹窗 1
+任务弹窗 2
+
+prd https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80369315276
+效果图 http://ued.qunhequnhe.com/%E7%BE%8E%E9%97%B41.0/%E7%BE%8E%E9%97%B4%E6%88%90%E9%95%BF%E4%BD%93%E7%B3%BB0701/#artboard2
+
 https://juejin.cn/post/6971116221521461262
 
 美间大前端 规划 https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80364640530
