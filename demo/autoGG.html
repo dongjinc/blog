@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+
+      .operation {
+        position: fixed;
+        top: 0px;
+        left: 0;
+        right: 0;
+        border-bottom: 4px solid pink;
+      }
+
+      svg,
+      g {
+        /* transition: all 0.1s linear; */
+      }
+      .editor {
+        position: absolute;
+        top: 1px;
+        visibility: hidden;
+        background-color: #fff;
+      }
+      .operator {
+        position: absolute;
+        top: 1px;
+        display: flex;
+        display: none;
+        /* width: 160px; */
+        /* height: 160px; */
+        /* background: red; */
+        /* border: 1px solid red; */
+        box-sizing: border-box;
+      }
+      .operator div {
+        border: 1px solid pink;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 14px;
+        line-height: 50px;
+        text-align: center;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .operator div:nth-child(1) {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      .operator div:nth-child(2) {
+        position: absolute;
+        top: 0px;
+        left: 110px;
+      }
+      .operator div:nth-child(3) {
+        position: absolute;
+        top: 110px;
+        left: 0px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <svg
+      id="svg"
+      version="1.1"
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+    
+      <defs>
+        <marker
+          id="triangle"
+          markerUnits="strokeWidth"
+          markerWidth="5"
+          markerHeight="4"
+          refX="0"
+          refY="2"
+          orient="auto"
+        >
+          <path d="M 0 0 L 5 2 L 0 4 z" />
+        </marker>
+      </defs>
+      <g id="gg1" transform="translate(0 0)">
+        <rect
+          rx="6"
+          x="0"
+          y="0"
+          width="100"
+          height="40"
+          style="
+            fill: blue;
+            stroke: pink;
+            stroke-width: 3;
+            fill-opacity: 0.1;
+            stroke-opacity: 0.9;
+          "
+        >
+      </rect>
+      <text font-size="16" y="20">开始</text>
+
+        <!-- <g transform="translate(0 160)">
+          <rect
+            rx="6"
+            x="0"
+            y="0"
+            width="100"
+            height="40"
+            style="
+              fill: blue;
+              stroke: pink;
+              stroke-width: 3;
+              fill-opacity: 0.1;
+              stroke-opacity: 0.9;
+            "
+          />
+          <path
+            d="M 52.5,-118.5 L 52.5,-10"
+            stroke="black"
+            stroke-width="2"
+            fill="none"
+            style="marker-end: url(#triangle)"
+          />
+        </g> -->
+      </g>
+    </svg>
+    <div id="editor" class="editor" contenteditable="true">1</div>
+    <div id="operator" class="operator">
+      <div id="same-level" onclick="sameLevel()">同级</div>
+      <div id="down-level" onclick="downLevel()">下级</div>
+      <div>形状</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+      const defaultRectColor = {
+        fill: 'blue',
+        stroke: 'red',
+        'stroke-width': 3,
+        'fill-opacity': 0.1,
+        'stroke-opacity': 0.9
+      }
+
+      const threshold = 3.5;
+      //参考百度脑图，通过transform wheel 滚动
+      class AutoGOGO {
+        constructor() {
+          this.el = document.getElementById("svg");
+          this.mainGG = document.getElementById("gg1");
+          this.rectSpace = 80;
+          this.treeDeep = 2;
+          this.mainTree = {
+            id: 'gg1',
+            text: "开始",
+            children: []
+          };
+          this.backendTree = {
+            'gg1': {
+              text: '开始',
+              children: []
+            }
+          }
+          this.currentNode = null;
+          this.activeEditor = null;
+          this.editorEl = document.getElementById("editor")
+          this.operator = document.getElementById("operator")
+          this.init();
+        }
+        init() {
+          console.log(this);
+          // 绑定事件监听
+          // 1.绑定滚轮事件
+          this.addEvent("wheel", (e) => {
+            const { x, y } = this.getLocation();
+            const dataX = x + Math.floor(e.wheelDeltaX / threshold);
+            const dataY = y + Math.floor(e.wheelDeltaY / threshold);
+            this.setLocation(dataX, dataY);
+            if(this.activeEditor){
+              console.log(this.editorEl.style.getPropertyValue('top'), 'aa')
+
+            }
+            this.operator.style.setProperty('display', 'none');
+          });
+          // 激活rect/顺带可修改文本
+          this.addEvent("click", (e) => {
+            console.log(e)
+            this.operator.style.setProperty('display', 'none');
+
+            if (e.target.tagName === "svg") {
+              this.currentNode && this.currentNode.style.setProperty('stroke', 'pink');
+              this.currentNode = null;
+              this.editorEl.style.setProperty('visibility', 'hidden');
+              this.appendChild = null;
+              return false;
+            }
+           const targetNode = this.findChildElDom(e.target.parentNode, 'rect')
+           if(targetNode.tagName === 'rect'){
+            this.currentNode && this.currentNode.style.setProperty('stroke', 'pink');
+            targetNode.style.setProperty('stroke', 'red');
+            this.currentNode = targetNode;
+           }
+
+          });
+
+          // 激活文本编辑
+          this.addEvent("dblclick", (e) => {
+            const parentNode = e.target.parentNode;
+            
+            const rectNode = this.findChildElDom(parentNode, 'rect')
+            const {x, y} = rectNode.getBoundingClientRect()
+            this.editorEl.style.setProperty('visibility', 'visible');
+            this.editorEl.style.setProperty('top', y + 'px');  
+            this.editorEl.style.setProperty('left', x + 'px');  
+            
+            const currentId = parentNode.getAttribute("id")
+
+            this.activeEditor = {
+              id: currentId,
+              parentNode
+            };
+
+            this.editorEl.innerText = this.backendTree[currentId].text
+            
+
+          });
+
+          this.addEvent('keydown', e => {
+            if(e.keyCode === 13 && !e.shiftKey){
+              const {id, parentNode} = this.activeEditor
+              this.editorEl.style.setProperty('visibility', 'hidden');
+              const textNode = this.findChildElDom(parentNode, 'text')
+              textNode.textContent = e.target.textContent
+              this.backendTree[id].text = e.target.textContent
+              
+              this.activeEditor = null;
+              console.log(this.backendTree)
+              e.preventDefault();
+              return false
+            }
+          }, this.editorEl)
+
+          this.addEvent('contextmenu', e => {
+            e.preventDefault()
+            
+            if (e.target.tagName === "svg") {
+              return false;
+            }
+
+            const parentNode = e.target.parentNode;
+            
+            const rectNode = this.findChildElDom(parentNode, 'rect')
+            const {width, height} = this.getEleRect(rectNode)
+
+            const {x, y} = rectNode.getBoundingClientRect()
+
+            this.operator.style.setProperty('display', 'block');
+            this.operator.style.setProperty('top', y - (160 - height) / 2  + 'px');  
+            this.operator.style.setProperty('left', x - (160 - width) / 2 + 'px'); 
+
+            const targetNode = this.findChildElDom(e.target.parentNode, 'rect')
+            if(targetNode.tagName === 'rect'){
+              this.currentNode && this.currentNode.style.setProperty('stroke', 'pink');
+              targetNode.style.setProperty('stroke', 'red');
+              this.currentNode = targetNode;
+
+              const currentId =
+                "gg" + parentNode.getAttribute("id").match(/\d/g)[0] * 1;
+
+              this.activeEditor = {
+                id: currentId,
+                parentNode
+              }
+            }
+
+            // console.log(width, height)
+          })
+
+          this.rectifyLocation();
+        }
+        findChildElDom(parentNode, findNodeName){
+          return parentNode.querySelector(findNodeName)
+        }
+        // setType 类型 default、reset
+        setRectStyle(style, setType, targetNode = this.currentNode) {
+          // 先获取原来节点 style 参数
+          const alreadyStyle = targetNode.getAttribute("style");
+          console.log(typeof alreadyStyle, 'alreadyStyle')
+          
+          targetNode.style.setProperty('stroke', 'red');
+
+          // targetNode.setAttribute(
+          //   "style",
+          //   JSON.stringify(defaultRectColor)
+          // );
+        }
+        /**
+         * normal - 全局整体调整
+         * add - 焦点对齐新增的节点
+         * **/
+        rectifyLocation(type = "normal", el = this.mainGG) {
+          const { width, height } = this.getEleRect();
+          const x = document.body.clientWidth / 2 - width / 2;
+          const y =
+            document.body.clientHeight / 2 -
+            height / (type !== "normal" ? 1 : 2);
+
+          this.setLocation(x, y);
+        }
+        addEvent(type, cb, el = this.el) {
+          el.addEventListener(type, cb, false);
+        }
+        setLocation(x, y, el = this.mainGG) {
+          // @TODO:可以考虑放在内存里
+          el.setAttribute("data-x", x);
+          el.setAttribute("data-y", y);
+          el.setAttribute("transform", `translate( ${x} ${y} )`);
+        }
+        getLocation(el = this.mainGG) {
+          // el.getBoundingClientRect
+          return {
+            x: el.getAttribute("data-x") * 1,
+            y: el.getAttribute("data-y") * 1,
+          };
+        }
+        getEleRect(el = this.mainGG) {
+          const { width, height } = el.getBoundingClientRect();
+          return {
+            width,
+            height,
+          };
+        }
+        createRect(parentNode) {
+          const {group, rect, text} = this.createMultiElement()
+
+          rect.setAttribute("rx", "6");
+          rect.setAttribute("x", "0");
+          rect.setAttribute("y", "0");
+          rect.setAttribute(
+            "style",
+            "fill: blue; stroke: pink;stroke-width: 3;fill-opacity: 0.1;stroke-opacity: 0.9;"
+          );
+          rect.setAttribute("width", "100");
+          rect.setAttribute("height", "40");
+
+          text.setAttribute("y", "20");
+          text.textContent = '开始'
+
+          if (parentNode) {
+            const { width, height } = this.getEleRect();
+            const key = "gg" + this.treeDeep
+            group.setAttribute("id", key);
+            this.setLocation(0, height + this.rectSpace, group);
+            const line = this.createArrowLine(parentNode);
+            this.backendTree = {
+              ...this.backendTree,
+              [key]: {
+                text: '开始',
+                parentId: 'gg' + (this.treeDeep - 1),
+                children: []
+              }
+          }
+            
+            this.currentNode && this.currentNode.style.setProperty('stroke', 'pink');
+            rect.style.setProperty('stroke', 'red');
+            this.currentNode = rect;
+
+            group.appendChild(line);
+            console.log(this.backendTree, 'backendTree')
+          } else {
+            this.setLocation(0, 0, group);
+          }
+          group.appendChild(rect);
+          group.appendChild(text);
+          this.mainGG.appendChild(group);
+
+          this.operator.style.setProperty('display', 'none');
+
+
+          // this.rectifyLocation("add");
+          this.treeDeep++;
+
+        }
+        createSameArrowLine(parentNode){
+           // 如果要加下个节点时,需要先获取当前节点的宽、高
+           const { width, height } = this.getEleRect(parentNode);
+
+
+            const d = `M -70 -70 l 120 0 l 0 60`;
+            const line = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "path"
+            );
+            line.setAttribute("d", d);
+            line.setAttribute("stroke", "black");
+            line.setAttribute("stroke-width", "2");
+            line.setAttribute("fill", "none");
+            line.setAttribute("style", "marker-end: url(#triangle)");
+            return line;
+        }
+        createArrowLine(parentNode) {
+          // 如果要加下个节点时,需要先获取当前节点的宽、高
+          const { height } = this.getEleRect(parentNode);
+          
+          let {x} = parentNode.dataset
+
+          if(this.treeDeep <= 2){
+            x = 0
+          }
+          console.log(parentNode, x)
+          const d = `M ${x * 1 + (100 / 2)}, -${this.rectSpace} L ${x * 1 + (100 / 2)}, -10`;
+          const line = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          line.setAttribute("d", d);
+          line.setAttribute("stroke", "black");
+          line.setAttribute("stroke", "black");
+          line.setAttribute("stroke-width", "2");
+          line.setAttribute("style", "marker-end: url(#triangle)");
+          return line;
+        }
+        addDownLevel(){
+          const parentNode = this.currentNode.parentNode
+          if (parentNode.tagName.toLowerCase() === "g") {
+            // @TODO: 如果点击已存在的节点,就创建其相邻子节点,否则直接创建子节点
+            const childId =
+              parentNode.getAttribute("id").match(/\d/g)[0] * 1 + 1;
+              console.log(parentNode, 'parentNode')
+            const hasChild = document.getElementById("gg" + childId);
+
+            if (hasChild) {
+
+              console.log('同级')
+            } else {
+              this.createRect(parentNode);
+            }
+          }
+        }
+        addSameLevel(){
+          
+          if(this.activeEditor.id === 'gg1'){
+            console.log('根级别不可点击同级按钮')
+            return false
+          }
+
+          const parentNode = this.currentNode.parentNode;
+
+          
+
+          const sameLevel = [...this.mainGG.querySelectorAll('g')].filter(g => g.id.includes(this.activeEditor.id))
+          const sameLastLevel = sameLevel[sameLevel.length - 1]
+
+          const {dataset} = sameLastLevel
+
+          const {group, rect, text} = this.createMultiElement()
+          rect.setAttribute("rx", "6");
+          rect.setAttribute("x", 0);
+          rect.setAttribute("y", 0);
+          rect.setAttribute(
+            "style",
+            "fill: blue; stroke: pink;stroke-width: 3;fill-opacity: 0.1;stroke-opacity: 0.9;"
+          );
+          rect.setAttribute("width", "100");
+          rect.setAttribute("height", "40");
+
+          this.setLocation(dataset.x * 1 + 120, 0, group);
+
+          const addId =
+                "gg" + parentNode.getAttribute("id").match(/\d/g)[0] * 1 +'-'+ sameLevel.length;
+
+          group.setAttribute("id", addId);
+
+          text.setAttribute("y", "20");
+          text.textContent = '开始'
+
+          group.appendChild(rect);
+          group.appendChild(text);
+
+          const line = this.createSameArrowLine(parentNode)
+          group.appendChild(line);
+          
+        
+          const [parentId, nodesId] = parentNode.getAttribute("id").match(/\d/g)
+
+          document.getElementById("gg"+parentId).appendChild(group);
+
+
+          this.backendTree = {
+              ...this.backendTree,
+              [addId]: {
+                text: '开始',
+                parentId: 'gg' + (parentId - 1),
+                children: []
+              }
+            }
+
+          this.operator.style.setProperty('display', 'none');
+
+
+          // this.rectifyLocation("add");
+        }
+        createMultiElement(){
+          const group = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g"
+          );
+
+          const rect = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+
+          return {
+            group,
+            rect,
+            text
+          }
+        }
+      }
+
+      const autoGG = new AutoGOGO();
+
+
+      function downLevel(){
+        console.log(autoGG.currentNode)
+        autoGG.addDownLevel()
+      }
+
+      // 同等级
+      function sameLevel(){
+      
+        autoGG.addSameLevel()
+      }
+
+      /**
+       * 相关api
+       * document.body.clientWidth
+       * document.body.clientHeight
+       * el.getBoundingClientRect
+       **/
+    </script>
+  </body>
+</html>
+
+<!-- 
+    心得体会
+    1.使用js创建svg元素时,需要使用命名空间URI createElementNS 方法,否则使用createElement  https://stackoverflow.com/questions/16488884/add-svg-element-to-existing-svg-using-dom
+    2.获取dom节点宽、高度: el.offsetWidth(+border)/clientWidth, el.getBoundingClientRect
+    3.div contenteditable 绑定回车事件, shift+enter 会在event事件中 暴露 shiftKey 字段, 可用来做回车键事件逻辑处理
+    4.通过ele设置style字段属性, 例如: element.style.setProperty('height', '300px', 'important'); 
+    5.根据父元素找指定子元素 - 父元素.选择器('元素特征')
+    6.svg修改text元素内容(textContent)
+ -->
+
+ <!-- 
+   面临问题
+   1.父子上下级占位问题, 如何适配
+   2.数据格式定义
+   3.形状定义
+  
+  -->
+
+<!-- https://blog.csdn.net/laok_/article/details/75760572 -->
+

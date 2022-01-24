@@ -23,3 +23,6 @@ function foo1(){
 }
 
 console.log(foo1());
+
+console.log('foo placeholders')
+foo placeholders

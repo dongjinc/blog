@@ -52,3 +52,36 @@ API https://doc.qunhequnhe.com/project/3627/interface/api/cat_52846
 
 美间大前端 规划 https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80364640530
 美间需求 规划 https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80358814818
+
+# 美间 sp 23
+
+prd:
+1、https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80378914476
+2、https://cf.qunhequnhe.com/pages/viewpage.action?pageId=80380538149
+
+设计稿: https://mindlink.qunhequnhe.com/#/share?id=337&group=153
+
+- 弹窗 2 期 devDesign(微应用、使用方式、SSE 设计)
+- cms 弹窗 2 期 - 新增奖励类型、触发行为(列) 2
+- 弹窗微应用形式 2
+- 奖励弹窗布局 2
+- 跳转和领取奖励逻辑
+-
+- 其他弹窗的冲突管理 2
+
+// url: `${Api.giftPacks.newUserGifts}/${giftKey}` 领取礼包
+
+postMessageService.addTab({
+    url: PATH_NAMES.RESOURCES_LIBRARY_FOLDER.replace(
+    ':folderId',
+    comebackGifts?.itemGift?.folderId
+    )
+});
+
+<!-- 会员中心 -->
+
+postMessageService.addTab({ url: PATH_NAMES.SETTINGS_PRO });
+
+
+
+

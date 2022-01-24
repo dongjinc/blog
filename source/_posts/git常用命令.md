@@ -65,3 +65,41 @@ title: git常用命令
 
     git remote rename <oldRemote> <newRemote> 运行 git remote rename 来修改一个远程仓库的简写名
     git remote remove <remote>
+
+### 设置 git commit 模版
+
+    git commit 会带出vim界面填写最终的结果
+    通过修改 ~/.gitconfig 添加
+    ```
+        [commit]
+        template = ~/.gitmessage (文件名)
+        新建的 ~/.gitmessage 内容
+        # head: <type>(<scope>): <subject>
+        # - type: feat, fix, docs, style, refactor, test, chore
+        # - scope: can be empty (eg. if the change is a global or difficult to assign to a single component)
+        # - subject: start with verb (such as 'change'), 50-character line
+        #
+        # body: 72-character wrapped. This should answer:
+        # * Why was this change necessary?
+        # * How does it address the problem?
+        # * Are there any side effects?
+        #
+        # footer:
+        # - Include a link to the ticket, if any.
+        # - BREAKING CHANGE
+        #
+    ```
+
+### 相关包
+
+- commitizen
+- cz-conventional-changelog
+- cz-customizable
+
+### git 提交规范
+
+- Git Commit Message
+
+- http://404player.cn/2020/11/07/Powershell%E4%B9%8B%E6%8A%98%E8%85%BE%E7%AC%94%E8%AE%B0/
+- https://jishuin.proginn.com/p/763bfbd67870
+- https://www.bilibili.com/video/BV1Vi4y1u7ea/

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>js本地文件读取</title>
+    <script>
+      function displayText() {
+        let text = load("../data/test.dat");
+        document.getElementById("demo").innerHTML = text;
+        console.log(text);
+      }
+      function load(name) {
+        let xhr = new XMLHttpRequest();
+        //let okStatus = document.location.protocol === "file:" ? 0 : 200;
+        xhr.open("GET", name, false);
+        xhr.overrideMimeType("text/html;charset=utf-8"); //默认为utf-8
+        xhr.send(null);
+        //return xhr.status === okStatus ? xhr.responseText : null;
+        return xhr.responseText;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>我的第一个 JavaScript 程序</h1>
+    <p id="demo">这是一个段落</p>
+
+    <button type="button" onclick="displayText()">显示文件内容</button>
+  </body>
+</html>
